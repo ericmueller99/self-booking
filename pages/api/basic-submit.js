@@ -42,6 +42,7 @@ export default function handler(req,res) {
             })
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({
             result:false,
             errorMessage: error.message

@@ -1,5 +1,5 @@
 import React from "react";
-import {BasicForm, LoadingWidget, QualifyForm, BookAViewing} from '../node_modules/hollyburn-lib/dist/esm/index';
+import {BasicForm, LoadingWidget, QualifyForm, BookAViewing, ThankYou} from 'hollyburn-lib';
 import axios from "axios";
 import '../node_modules/react-datepicker/dist/react-datepicker.css';
 import {useRouter} from "next/router";
@@ -21,7 +21,7 @@ export default function Home() {
     setVacancyId(query.vacancy_id ? query.vacancy_id : null);
   }, [query])
 
-  //step 1 state updates
+  //step 1 - state updates
   React.useEffect(() => {
 
     //if there was a match, but firstName, lastName, or PhoneNumber didnt match what the lead typed in then update Salesforce to match
@@ -86,7 +86,7 @@ export default function Home() {
 
   }, [basicForm]);
 
-  //qualification form updated
+  //step 2 - qualification form updated
   React.useEffect(() => {
 
     if (qualifyForm.qualifyComplete) {
@@ -97,13 +97,19 @@ export default function Home() {
     if (formSubmissionId) {
       setQualifyForm({
         ...qualifyForm,
-        qualifyComplete: true
+        qualifyComplete: true,
       })
+      if (!basicForm.isQualified) {
+        setBasicForm({
+          ...basicForm,
+          isQualified: true
+        })
+      }
     }
 
   }, [qualifyForm]);
 
-  //booking form updated
+  //step 3 - booking form updated
   React.useEffect(() => {
 
     //stop if any of these are true.
@@ -154,11 +160,33 @@ export default function Home() {
   }
   const handleBookBack = (event) => {
     event.preventDefault();
+    if (!qualifyForm.result) {
+      setBasicForm({
+        ...basicForm,
+        result: false
+      })
+    }
+    else {
+      setQualifyForm({
+        ...qualifyForm,
+        result: false
+      })
+    }
+  }
+  const handlePrefsUpdate = (event) => {
+    event.preventDefault();
+    //basicForm.checkComplete && basicForm.result && basicForm.isQualified
+    setBasicForm({
+      ...basicForm,
+      checkComplete: true,
+      result: true,
+      isQualified: false,
+    });
     setQualifyForm({
       ...qualifyForm,
       result: false
     })
-    console.log('going back!');
+    console.log('hello');
   }
 
   //wizard display logic.
@@ -168,10 +196,14 @@ export default function Home() {
     const bookAViewingOptions = {
       buttonText: 'Book Viewing',
       showBack: true,
-      handleBackButton: handleBookBack
+      handleBackButton: handleBookBack,
+      showUpdatePrefsBanner: true,
+      handleUpdatePrefs: handlePrefsUpdate,
+      preferences: {
+        ...basicForm,
+        ...qualifyForm
+      }
     }
-
-    console.log(basicForm);
 
     if (!basicForm.result) {
       const options = {
@@ -187,7 +219,14 @@ export default function Home() {
         handleBackButton: handleQualifyBack,
         submitUrl: '/api/qualify-submit'
       }
-      return <QualifyForm options={options} {...basicForm} stateSetter={setQualifyForm} />
+
+      //too take the preferences from the qualify form first incase they press back.
+      const preferences = {
+        ...basicForm,
+        ...qualifyForm,
+      }
+
+      return <QualifyForm options={options} {...preferences} stateSetter={setQualifyForm} />
     }
     //basic form is complete and user is qualified already.  Show the book a viewing form.
     else if (basicForm.checkComplete && basicForm.result && basicForm.isQualified) {
@@ -197,11 +236,17 @@ export default function Home() {
     else if (basicForm.checkComplete && qualifyForm.result && qualifyForm.qualifyComplete) {
       return <BookAViewing options={bookAViewingOptions} stateSetter={setBookingForm} vacancyId={vacancyId} />
     }
+    //loading and nothing else is going on
     else if (isLoading) {
       return (
           <div className={"p-10 h-48"}></div>
       )
     }
+    //wizard is completed and the unit is booked
+    else if (bookingStatus.status === 'booked') {
+      return <ThankYou />
+    }
+    //some unexepcted state happend.
     else {
       return <div className={"p-10"}>Render something here!</div>
     }
