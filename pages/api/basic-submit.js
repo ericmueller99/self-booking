@@ -28,6 +28,7 @@ export default function handler(req,res) {
         salesforce.getLeadOrContact(emailAddress)
             .then(leadOrContact => {
                 console.log(leadOrContact);
+                console.log(leadOrContact);
                 res.status(200).json({
                     result: true,
                     ...leadOrContact

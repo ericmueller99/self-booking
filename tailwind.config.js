@@ -19,6 +19,10 @@ module.exports = {
         'fontGray': "#868686",
         'hbBlue': '#003976'
       },
+      minHeight: {
+        '1/2':'50%',
+        '1/4':'25%'
+      }
     },
   },
   plugins: [],

@@ -8,6 +8,8 @@ export default function handler(req,res) {
         return;
     }
 
+    console.log(req.body);
+
     const {basicForm, qualifyForm, bookingForm} = req.body;
     const {startDate, endDate, property, suites} = bookingForm;
     const {emailAddress, firstName, lastName, phoneNumber} = basicForm;

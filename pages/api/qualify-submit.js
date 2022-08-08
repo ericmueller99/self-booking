@@ -3,6 +3,8 @@ import {Salesforce} from 'salesforce-connect';
 
 export default function handler(req,res) {
 
+    //TODO before submitting a new form everytime check to see if the information is updated or new.  Because there is a back button on this i don't want a ton of form submissions for no reason
+
     //only accepting post requests
     if (req.method.toLowerCase() !== 'post') {
         res.status(401).send('');
