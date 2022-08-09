@@ -37,8 +37,13 @@ export default function handler(req,res) {
         Neighbourhood__c: qualifyForm.neighbourhoods && qualifyForm.length > 0 ? qualifyForm.neighbourhoods.join(';') :
             basicForm.neighbourhoods && basicForm.neighbourhoods.length > 0 ? basicForm.neighbourhoods.join(';') : null,
         Calendar_Id__c: calendarEvent.id,
-        Related_Vacancy_Ids__c: vacancyIds.join(';')
+        Related_Vacancy_Ids__c: vacancyIds.join(';'),
+        Converts_Lead__c: true,
+        Property_HMY__c: bookingForm.property
     }
+
+    console.log(calendarEvent);
+    console.log(formSubmissionDetails);
 
     //the form APEX trigger performs some actions on the calendar event, so it needs to be created first.
     salesforce.insertSingleRecord('Event', eventDetails)

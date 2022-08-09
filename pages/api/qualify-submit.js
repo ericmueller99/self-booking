@@ -42,7 +42,8 @@ export default function handler(req,res) {
             Lead_Source_Detail__c: 'ILS Qualification',
             Task_Priority__c: 'High',
             City_Preference__c: cities.toString().replace(/,/g, ';'),
-            Neighbourhood__c: neighbourhoods ? neighbourhoods.toString().replace(/,/g, ';') : null
+            Neighbourhood__c: neighbourhoods ? neighbourhoods.toString().replace(/,/g, ';') : null,
+            Update_Preference__c: true
         }
         const salesforce = new Salesforce(connectionType, connection);
         salesforce.insertSingleRecord('Form_Submission__c', salesforceData)

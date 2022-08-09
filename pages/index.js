@@ -279,8 +279,9 @@ export default function Home() {
         ...basicForm,
         ...qualifyForm
       },
-        title: 'Book Viewing',
-        descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book on.'
+      title: 'Book Viewing',
+      descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book on.',
+      formHolderClasses: 'none'
     }
 
     //if view state is set then overriding the normal view
@@ -417,9 +418,12 @@ export default function Home() {
             {/*right side image*/}
             <div className="lg:absolute lg:inset-0">
               <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-                <img className="h-56 w-full object-cover lg:absolute lg:h-full"
-                     src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"
-                     alt="" />
+                {/*<img className="h-56 w-full object-cover lg:absolute lg:h-full"*/}
+                {/*     src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"*/}
+                {/*     alt="" />*/}
+                  <img className="h-56 w-full object-fill lg:absolute lg:h-full"
+                       src="/images/wizard1.jpg"
+                       alt="" />
               </div>
             </div>
 
