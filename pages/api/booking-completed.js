@@ -42,9 +42,6 @@ export default function handler(req,res) {
         Property_HMY__c: bookingForm.property
     }
 
-    console.log(calendarEvent);
-    console.log(formSubmissionDetails);
-
     //the form APEX trigger performs some actions on the calendar event, so it needs to be created first.
     salesforce.insertSingleRecord('Event', eventDetails)
         .then(() => salesforce.insertSingleRecord('Form_Submission__c', formSubmissionDetails))

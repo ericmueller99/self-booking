@@ -8,8 +8,6 @@ export default function handler(req,res) {
         return;
     }
 
-    console.log(req.body);
-
     const {basicForm, qualifyForm, bookingForm} = req.body;
     const {startDate, endDate, property, suites} = bookingForm;
     const {emailAddress, firstName, lastName, phoneNumber} = basicForm;
@@ -22,7 +20,7 @@ export default function handler(req,res) {
         })
     }
 
-    const bookingUrl = `http://localhost:3001/properties/property/${property}/book-a-viewing`;
+    const bookingUrl = `https://api.hollyburn.com/properties/property/${property}/book-a-viewing`;
     const postData = {
         startDate, endDate, bookingType: 'self',
         emailAddress, firstName, lastName, phoneNumber,

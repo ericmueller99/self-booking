@@ -20,6 +20,7 @@ export default function Home() {
   React.useEffect(() => {
     setVacancyId(query.vacancy_id ? query.vacancy_id : null);
   }, [query])
+  const [wizardImg, setWizardImg] = React.useState('wizard1.jpg');
 
   //step 1 - state updates
   React.useEffect(() => {
@@ -87,6 +88,12 @@ export default function Home() {
           //if the qualification form is already setup then reset it
           setIsLoading(false);
           setError({error:false})
+            if (isQualified) {
+                setWizardImg('wizard3.jpg');
+            }
+            else {
+                setWizardImg('wizard2.jpg');
+            }
         })
         .catch(error => {
           console.log(error);
@@ -113,10 +120,7 @@ export default function Home() {
       if (currentView) {
         setCurrentView(null);
       }
-
-      console.log('qualification form was updated');
-      console.log(qualifyForm);
-
+      setWizardImg('wizard3.jpg');
       setQualifyForm({
         ...qualifyForm,
         qualifyComplete: true,
@@ -163,12 +167,20 @@ export default function Home() {
         .then(() => {
           setBookingStatus({status: 'booked'});
           setIsLoading(false);
+          setTimeout(() => {
+            scrollToLoadingTop();
+          }, 500);
         })
         .catch(error => {
           console.log('there was an error completing the booking');
           console.log(error);
+          console.log(error.response.data);
           setIsLoading(false);
           setBookingStatus({status:'error'});
+          setError({
+            error: true,
+            errorMessage: error.response?.data
+          })
         });
 
   },[bookingForm]);
@@ -177,19 +189,23 @@ export default function Home() {
   const handleQualifyBack = (event) => {
     event.preventDefault();
     setCurrentView('basic');
+    setWizardImg('wizard1.jpg');
   }
   const handleBookBack = (event) => {
     event.preventDefault();
     if (qualifyForm.qualifyComplete) {
       setCurrentView('qualify')
+        setWizardImg('wizard2.jpg');
     }
     else {
       setCurrentView('basic');
+      setWizardImg('wizard1.jpg');
     }
   }
   const handlePrefsUpdate = (event) => {
     event.preventDefault();
     setCurrentView('qualify');
+    setWizardImg('wizard2.jpg');
   }
   const resetForm = (event) => {
     event.preventDefault();
@@ -198,6 +214,15 @@ export default function Home() {
     setBasicForm({resetForm: false});
     setCurrentView(null);
     setBookingStatus({status: 'not booked'});
+    setWizardImg('wizard1.jpg');
+  }
+  const scrollToLoadingTop = (event) => {
+    event.preventDefault();
+    scroller.scrollTo('completed-top', {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    });
   }
   const scrollToWizardTop = (event) => {
     event.preventDefault();
@@ -205,10 +230,11 @@ export default function Home() {
       duration: 800,
       delay: 0,
       smooth: 'easeInOutQuart'
-    })
+    });
   }
-  const WizardContent = ({title, descriptionText}) => {
+  const WizardContent = ({title, descriptionText, disclaimerText}) => {
     return (
+      <>
         <div className="max-w-md mx-auto sm:max-w-2xl lg:mx-0">
           <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             {title}
@@ -217,9 +243,18 @@ export default function Home() {
             {descriptionText}
           </p>
         </div>
+        {
+          disclaimerText &&
+          <div className="mx-auto mt-4">
+            <p className="text-xs text-hbBlue">
+              {disclaimerText}
+            </p>
+          </div>
+        }
+      </>
     )
   }
-  const ErrorMessage = () => {
+  const ErrorMessage = ({errorMessage}) => {
       return (
           <div className="col-span-2 mt-4">
               <div className="rounded-md bg-red-400 p-4">
@@ -228,7 +263,7 @@ export default function Home() {
                           <XCircleIcon className="h-7 w-7 text-white" aria-hidden="true" />
                       </div>
                       <div className="ml-3 flex-1 md:flex md:justify-between text-center">
-                          <p className={"text-white"}>{error.errorMessage}</p>
+                          <p className={"text-white"}>{errorMessage || error.errorMessage}</p>
                       </div>
                   </div>
               </div>
@@ -281,8 +316,12 @@ export default function Home() {
       },
       title: 'Book Viewing',
       descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book on.',
-      formHolderClasses: 'none'
+      formHolderClasses: 'none',
+      disclaimerText: 'A booking does not guarantee a showing or rental of a suite.  Hollyburn Properties rents on a first come first serve basis for qualified prospects.  ' +
+            'In the event that a suite is rented before a showing any pending showings will be cancelled.'
     }
+
+    console.log(vacancyId);
 
     //if view state is set then overriding the normal view
     if (currentView) {
@@ -357,9 +396,8 @@ export default function Home() {
             <div className={"p-10 h-48"}></div>
         )
       }
-      //some unexpected state happened.
-      else {
-        return <div className={"p-10"}>Render something here!</div>
+      else if (error && error.errorMessage) {
+        return <ErrorMessage />
       }
     }
 
@@ -388,7 +426,10 @@ export default function Home() {
 
   if (bookingStatus.status === 'booked') {
     return (
+      <>
+        <Element name="completed-top"></Element>
         <ThankYou message={thankYouMessage()} />
+      </>
     )
   }
   else {
@@ -418,12 +459,12 @@ export default function Home() {
             {/*right side image*/}
             <div className="lg:absolute lg:inset-0">
               <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-                {/*<img className="h-56 w-full object-cover lg:absolute lg:h-full"*/}
-                {/*     src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"*/}
-                {/*     alt="" />*/}
-                  <img className="h-56 w-full object-fill lg:absolute lg:h-full"
-                       src="/images/wizard1.jpg"
-                       alt="" />
+                  {
+                      wizardImg &&
+                      <img className="h-56 w-full object-cover lg:absolute lg:h-full transition transition-all ease-in-out duration-300"
+                           src={`/images/${wizardImg}`}
+                           alt="Book a Viewing" />
+                  }
               </div>
             </div>
 
