@@ -18,8 +18,10 @@ export default function handler(req,res) {
         Subject: calendarEvent.subject,
         StartDateTime: startDate,
         EndDateTime: endDate,
-        WhoId: basicForm.recordId ? basicForm.recordId : null,
+        WhoId: basicForm.recordType === 'Contact' && basicForm.recordId ? basicForm.recordId : null,
         Description: calendarEvent.body.content,
+        Type: 'Book a Viewing',
+        Virtual_Viewing__c: false,
     }
     const formSubmissionDetails = {
         Lead_Source__c: 'Form Submission',

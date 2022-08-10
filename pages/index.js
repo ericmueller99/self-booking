@@ -187,12 +187,16 @@ export default function Home() {
 
   //back button handlers.
   const handleQualifyBack = (event) => {
-    event.preventDefault();
+      if (event && event.preventDefault()) {
+          event.preventDefault();
+      }
     setCurrentView('basic');
     setWizardImg('wizard1.jpg');
   }
   const handleBookBack = (event) => {
-    event.preventDefault();
+      if (event && event.preventDefault()) {
+          event.preventDefault();
+      }
     if (qualifyForm.qualifyComplete) {
       setCurrentView('qualify')
         setWizardImg('wizard2.jpg');
@@ -217,7 +221,9 @@ export default function Home() {
     setWizardImg('wizard1.jpg');
   }
   const scrollToLoadingTop = (event) => {
-    event.preventDefault();
+      if (event && event.preventDefault()) {
+          event.preventDefault();
+      }
     scroller.scrollTo('completed-top', {
       duration: 800,
       delay: 0,
