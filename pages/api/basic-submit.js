@@ -37,7 +37,7 @@ export default function handler(req,res) {
                 console.log(error);
                 res.status(500).json({
                     result: false,
-                    errorMessage: "Service integration error.  Unable to get Salesforce data"
+                    errorMessage: error.message || "Service integration error.  Unable to get Salesforce data"
                 })
             })
     }
@@ -45,7 +45,7 @@ export default function handler(req,res) {
         console.log(error);
         res.status(500).json({
             result:false,
-            errorMessage: error.message
+            errorMessage: error.message || 'Unknown system error.  Please try again.'
         })
     }
 

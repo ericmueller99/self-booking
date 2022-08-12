@@ -3,7 +3,7 @@ import {BasicForm, LoadingWidget, QualifyForm, BookAViewing, ThankYou} from 'hol
 import axios from "axios";
 import '../node_modules/react-datepicker/dist/react-datepicker.css';
 import {useRouter} from "next/router";
-import {Element, scroller } from 'react-scroll'
+import {Element, scroller, animateScroll as scroll} from 'react-scroll'
 import {XCircleIcon} from "@heroicons/react/solid";
 
 export default function Home() {
@@ -55,7 +55,6 @@ export default function Home() {
     //submitting the step 1 wizard to the handler.  This will check if the user is qualified already in Salesforce and return the data.
     axios.post('/api/basic-submit', basicForm)
         .then(res => {
-          console.log(res);
           const {FirstName: firstName, LastName: lastName, Email: emailAddress, Phone: phoneNumber, isQualified, invalidFields, Preference__c: preferences = {}, recordType, Id: recordId} = res.data;
           const {Suite_Type__c: suiteTypes, Maximum_Budget__c: maxBudget, Desired_Move_In_Date__c: moveIn, Number_of_Occupants__c: numberOfOccupants, City__c: cities,
             Neighbourhood__c: neighbourhoods} = preferences || {};
@@ -94,15 +93,17 @@ export default function Home() {
             else {
                 setWizardImg('wizard2.jpg');
             }
+            scrollToWizardTop();
         })
         .catch(error => {
           console.log(error);
           setBasicForm({... basicForm, result: false})
             setError({
                 error: true,
-                errorMessage: "There was an error.  Please ensure the email address entered is valid and does not contain any special characters."
+                errorMessage: error.response?.data?.errorMessage || "There was an error.  Please ensure the email address entered is valid and does not contain any special characters."
             })
           setIsLoading(false);
+          scrollToWizardTop();
         });
 
   }, [basicForm]);
@@ -132,6 +133,7 @@ export default function Home() {
           isQualified: true
         })
       }
+      scrollToWizardTop();
     }
 
   }, [qualifyForm]);
@@ -150,6 +152,7 @@ export default function Home() {
     //update loading and booking states.
     setIsLoading(true);
     setBookingStatus({status: 'pending'});
+    setError({error: false})
 
     //submitting the the calendar event to the api via a local proxy endpoint
     let postData = {
@@ -167,20 +170,18 @@ export default function Home() {
         .then(() => {
           setBookingStatus({status: 'booked'});
           setIsLoading(false);
-          setTimeout(() => {
-            scrollToLoadingTop();
-          }, 500);
+          scrollToTop();
         })
         .catch(error => {
           console.log('there was an error completing the booking');
           console.log(error);
-          console.log(error.response.data);
           setIsLoading(false);
           setBookingStatus({status:'error'});
           setError({
             error: true,
-            errorMessage: error.response?.data
-          })
+            errorMessage: error.response?.data?.errorMessage || 'Error creating booking.  Please try again.'
+          });
+          scrollToWizardTop();
         });
 
   },[bookingForm]);
@@ -192,6 +193,7 @@ export default function Home() {
       }
     setCurrentView('basic');
     setWizardImg('wizard1.jpg');
+    scrollToWizardTop();
   }
   const handleBookBack = (event) => {
       if (event && event.preventDefault()) {
@@ -205,11 +207,13 @@ export default function Home() {
       setCurrentView('basic');
       setWizardImg('wizard1.jpg');
     }
+    scrollToWizardTop();
   }
   const handlePrefsUpdate = (event) => {
     event.preventDefault();
     setCurrentView('qualify');
     setWizardImg('wizard2.jpg');
+    scrollToWizardTop();
   }
   const resetForm = (event) => {
     event.preventDefault();
@@ -220,23 +224,22 @@ export default function Home() {
     setBookingStatus({status: 'not booked'});
     setWizardImg('wizard1.jpg');
   }
-  const scrollToLoadingTop = (event) => {
-      if (event && event.preventDefault()) {
-          event.preventDefault();
-      }
-    scroller.scrollTo('completed-top', {
-      duration: 800,
-      delay: 0,
-      smooth: 'easeInOutQuart'
+  const scrollToWizardTop = (event, options = {}) => {
+    if (event && event.preventDefault()) {
+      event.preventDefault();
+    }
+    const {duration = 800, delay = 0, smooth = 'easeInOutQuart'} = options;
+    scroller.scrollTo('wizard-top', {
+      duration,
+      delay,
+      smooth
     });
   }
-  const scrollToWizardTop = (event) => {
-    event.preventDefault();
-    scroller.scrollTo('wizard-top', {
-      duration: 800,
-      delay: 0,
-      smooth: 'easeInOutQuart'
-    });
+  const scrollToTop = (event) => {
+    if (event && event.preventDefault()) {
+      event.preventDefault();
+    }
+    scroll.scrollToTop();
   }
   const WizardContent = ({title, descriptionText, disclaimerText}) => {
     return (
@@ -323,11 +326,9 @@ export default function Home() {
       title: 'Book Viewing',
       descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book on.',
       formHolderClasses: 'none',
-      disclaimerText: 'A booking does not guarantee a showing or rental of a suite.  Hollyburn Properties rents on a first come first serve basis for qualified prospects.  ' +
+      disclaimerText: 'Please Note, a booking does not guarantee a showing or rental of a suite.  Hollyburn Properties rents on a first come first serve basis for qualified prospects.  ' +
             'In the event that a suite is rented before a showing any pending showings will be cancelled.'
     }
-
-    console.log(vacancyId);
 
     //if view state is set then overriding the normal view
     if (currentView) {
@@ -337,6 +338,11 @@ export default function Home() {
               <>
                 <WizardContent {...basicOptions} />
                 <BasicForm stateSetter={setBasicForm} options={basicOptions} {...basicForm} />
+                {
+                  error.error &&
+                  <ErrorMessage />
+
+                }
               </>
           )
         case 'qualify':
@@ -351,6 +357,11 @@ export default function Home() {
               <>
                 <WizardContent {...bookAViewingOptions} />
                 <BookAViewing options={bookAViewingOptions} stateSetter={setBookingForm} vacancyId={vacancyId} />
+                {
+                  error.error &&
+                  <ErrorMessage />
+
+                }
               </>
           )
       }
@@ -384,6 +395,11 @@ export default function Home() {
             <>
               <WizardContent {...bookAViewingOptions} />
               <BookAViewing options={bookAViewingOptions} stateSetter={setBookingForm} vacancyId={vacancyId} />
+              {
+                error.error &&
+                <ErrorMessage />
+
+              }
             </>
         )
       }
@@ -393,6 +409,11 @@ export default function Home() {
             <>
               <WizardContent {...bookAViewingOptions} />
               <BookAViewing options={bookAViewingOptions} stateSetter={setBookingForm} vacancyId={vacancyId} />
+              {
+                error.error &&
+                <ErrorMessage />
+
+              }
             </>
         )
       }
@@ -413,19 +434,16 @@ export default function Home() {
   const thankYouMessage = () => {
     return (
         <>
-          <p>
+          <span className="block">
             Thank you for using our self-booking form!
-          </p>
-          <p>
+          </span>
+          <span className="block">
             Please check your email for your calendar invite.  If you need to cancel or modify your booking you can use the Manage Booking link inside of the calendar invite.
-          </p>
-          <div className={"my-5"}>
-            <button onClick={event => resetForm(event)} type={"button"} className={"w-full inline-flex items-center justify-center px-6 py-1 border border-transparent rounded-md shadow-sm text-base " +
+          </span>
+          <span className={"my-5 block"}>
+            <button onClick={event => resetForm(event)} type={"button"} className={"w-full inline-flex items-center justify-center px-6 py-2 border border-transparent rounded-md shadow-sm text-base " +
                 "text-white bg-hbBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto"}>Book Additional Showings</button>
-          </div>
-          <p className={"pt-10 pb-5 text-sm"}>
-            *Please note that this booking does not guarantee the suite will not be rented before your showing.  In the event that a suite in a scheduled booking is rented any pending showings will be cancelled.
-          </p>
+          </span>
         </>
     )
   }
@@ -433,7 +451,6 @@ export default function Home() {
   if (bookingStatus.status === 'booked') {
     return (
       <>
-        <Element name="completed-top"></Element>
         <ThankYou message={thankYouMessage()} />
       </>
     )
@@ -486,6 +503,22 @@ export default function Home() {
               </div>
             </div>
 
+          </div>
+
+          <div className="py-24 bg-white sm:py-32">
+            <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8">
+              <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
+                Need Assistance
+              </h1>
+              <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
+                If you are having trouble or would like some additional assistance making your booking please call or email our Rental Advisor team at:
+              </p>
+              <dl className="mt-6 max-w-3xl mx-auto text-sm leading-normal text-gray-500 text-center">
+                <dd><span className="font-bold">Vancouver/Calgary: </span>604-369-4725</dd>
+                <dd><span className="font-bold">Toronto/Ottawa: </span> 436-888-8958</dd>
+                <dd><span className="font-bold">Email: </span> rent@hollyburn.com</dd>
+              </dl>
+            </div>
           </div>
 
         </main>

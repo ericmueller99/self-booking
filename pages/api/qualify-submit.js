@@ -40,7 +40,6 @@ export default function handler(req,res) {
             Pet_Friendly__c: petFriendly === 'Yes',
             Lead_Source__c: 'Form Submission',
             Lead_Source_Detail__c: 'ILS Qualification',
-            Task_Priority__c: 'High',
             City_Preference__c: cities.toString().replace(/,/g, ';'),
             Neighbourhood__c: neighbourhoods ? neighbourhoods.toString().replace(/,/g, ';') : null,
             Update_Preference__c: true
