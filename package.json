@@ -12,9 +12,11 @@
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
     "axios": "^0.27.2",
-    "hollyburn-lib": "https://github.com/ericmueller99/hollyburn-lib",
+    "fs": "^0.0.1-security",
+    "hollyburn-lib": "github:ericmueller99/hollyburn-lib",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",
+    "net": "^1.0.2",
     "next": "12.2.2",
     "npm": "^8.17.0",
     "react": "18.2.0",
@@ -22,8 +24,10 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.33.1",
     "react-scroll": "^1.8.7",
-    "salesforce-connect": "https://github.com/ericmueller99/salesforce-connect",
-    "update": "^0.7.4"
+    "request": "^2.88.2",
+    "salesforce-connect": "github:ericmueller99/salesforce-connect",
+    "update": "^0.7.4",
+    "hollyburn-util": "github:ericmueller99/hollyburn-util"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",

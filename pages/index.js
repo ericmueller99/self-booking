@@ -5,6 +5,7 @@ import '../node_modules/react-datepicker/dist/react-datepicker.css';
 import {useRouter} from "next/router";
 import {Element, scroller, animateScroll as scroll} from 'react-scroll'
 import {XCircleIcon} from "@heroicons/react/solid";
+import {scrollToWizardTop} from "./helpers";
 
 export default function Home() {
 
@@ -224,17 +225,6 @@ export default function Home() {
     setBookingStatus({status: 'not booked'});
     setWizardImg('wizard1.jpg');
   }
-  const scrollToWizardTop = (event, options = {}) => {
-    if (event && event.preventDefault()) {
-      event.preventDefault();
-    }
-    const {duration = 800, delay = 0, smooth = 'easeInOutQuart'} = options;
-    scroller.scrollTo('wizard-top', {
-      duration,
-      delay,
-      smooth
-    });
-  }
   const scrollToTop = (event) => {
     if (event && event.preventDefault()) {
       event.preventDefault();
@@ -448,6 +438,7 @@ export default function Home() {
     )
   }
 
+
   if (bookingStatus.status === 'booked') {
     return (
       <>
@@ -459,20 +450,32 @@ export default function Home() {
     return (
         <main>
 
-          <div className="py-24 bg-white sm:py-32">
-            <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8">
-              <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
-                Book A Viewing
-              </h1>
-              <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
-                Use our self-serve Book A Viewing wizard below to qualify yourself and book your next suite viewing.
-              </p>
-              <div className="mt-6 max-w-3xl mx-auto leading-normal text-gray-500 text-center">
-                <button type="button" onClick={event => scrollToWizardTop(event)} className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-hbBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto">Get Started</button>
-              </div>
+            <div className="min-h-screen grid grid-cols-1 items-center">
+                <div className="relative">
+                    {/*Hero image*/}
+                    <section className="block">
+                        <div className="py-44 lg:py-60 w-full bg-cover relative text-white bg-bookingBanner lg:bg-right">
+                            <div className="relative h-full"></div>
+                        </div>
+                    </section>
+                    {/*Book a viewing text*/}
+                    <div className="relative">
+                        <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8 py-24 bg-white z-50">
+                            <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
+                                Book A Viewing
+                            </h1>
+                            <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
+                                Use our self-serve Book A Viewing wizard below to qualify yourself and book your next suite viewing.
+                            </p>
+                            <div className="mt-6 max-w-3xl mx-auto leading-normal text-gray-500 text-center">
+                                <button type="button" onClick={event => scrollToWizardTop(event)} className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-hbBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
 
+          {/* Wizard */}
           <div className="relative bg-hbLightGray min-h-screen">
             <Element name="wizard-top"></Element>
 
@@ -505,6 +508,7 @@ export default function Home() {
 
           </div>
 
+          {/* Need Assistance ?? */}
           <div className="py-24 bg-white sm:py-32">
             <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8">
               <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">

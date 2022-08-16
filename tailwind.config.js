@@ -21,7 +21,15 @@ module.exports = {
       },
       minHeight: {
         '1/2':'50%',
-        '1/4':'25%'
+        '1/4':'25%',
+      },
+      maxHeight: {
+        '1/2': '50%',
+        '1/4': '25%'
+      },
+      backgroundImage: {
+        'bookingBanner': 'url(/images/booking-banner.jpg)',
+        'manageBanner':'url(/images/manage-banner.jpg)'
       }
     },
   },
