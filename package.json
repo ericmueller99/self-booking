@@ -14,6 +14,7 @@
     "axios": "^0.27.2",
     "fs": "^0.0.1-security",
     "hollyburn-lib": "github:ericmueller99/hollyburn-lib",
+    "hollyburn-util": "github:ericmueller99/hollyburn-util",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",
     "net": "^1.0.2",
@@ -24,8 +25,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.33.1",
     "react-scroll": "^1.8.7",
-    "salesforce-connect": "github:ericmueller99/salesforce-connect",
-    "hollyburn-util": "github:ericmueller99/hollyburn-util"
+    "salesforce-connect": "github:ericmueller99/salesforce-connect"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
