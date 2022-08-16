@@ -22,6 +22,7 @@ export default function handler(req,res) {
         Description: calendarEvent.body.content,
         Type: 'Book a Viewing',
         Virtual_Viewing__c: false,
+        Manage_Key__c: calendarEvent.manageKey
     }
     const formSubmissionDetails = {
         Lead_Source__c: 'Form Submission',

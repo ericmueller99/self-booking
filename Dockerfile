@@ -1,5 +1,6 @@
 FROM node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
+RUN apk --no-cache add --virtual .builds-deps build-base python3
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci

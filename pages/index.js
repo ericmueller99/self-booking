@@ -5,7 +5,9 @@ import '../node_modules/react-datepicker/dist/react-datepicker.css';
 import {useRouter} from "next/router";
 import {Element, scroller, animateScroll as scroll} from 'react-scroll'
 import {XCircleIcon} from "@heroicons/react/solid";
-import {scrollToWizardTop} from "./helpers";
+import {scrollToWizardTop} from "../lib/helpers";
+import NeedAssistance from "./components/NeedAssistance";
+import HeroImage from "./components/HeroImage";
 
 export default function Home() {
 
@@ -450,26 +452,21 @@ export default function Home() {
     return (
         <main>
 
-            <div className="min-h-screen grid grid-cols-1 items-center">
+            {/*Hero image*/}
+            <HeroImage imageClass={'bg-bookingBanner'} />
+
+            <div className="min-h-screen grid grid-cols-1 items-center pt-44 2xl:pt-72">
+                {/*Book a viewing text*/}
                 <div className="relative">
-                    {/*Hero image*/}
-                    <section className="block">
-                        <div className="py-44 lg:py-60 w-full bg-cover relative text-white bg-bookingBanner lg:bg-right">
-                            <div className="relative h-full"></div>
-                        </div>
-                    </section>
-                    {/*Book a viewing text*/}
-                    <div className="relative">
-                        <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8 py-24 bg-white z-50">
-                            <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
-                                Book A Viewing
-                            </h1>
-                            <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
-                                Use our self-serve Book A Viewing wizard below to qualify yourself and book your next suite viewing.
-                            </p>
-                            <div className="mt-6 max-w-3xl mx-auto leading-normal text-gray-500 text-center">
-                                <button type="button" onClick={event => scrollToWizardTop(event)} className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-hbBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto">Get Started</button>
-                            </div>
+                    <div className="max-w-md sm:max-w-lg mx-auto pl-4 pr-8 sm:px-6 lg:max-w-7xl lg:px-8 py-24 bg-white z-50 xl:rounded-xl">
+                        <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
+                            Book A Viewing
+                        </h1>
+                        <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
+                            Use our self-serve Book A Viewing wizard below to qualify yourself and book your next suite viewing.
+                        </p>
+                        <div className="mt-6 max-w-3xl mx-auto leading-normal text-gray-500 text-center">
+                            <button type="button" onClick={event => scrollToWizardTop(event)} className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-hbBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto">Get Started</button>
                         </div>
                     </div>
                 </div>
@@ -509,21 +506,7 @@ export default function Home() {
           </div>
 
           {/* Need Assistance ?? */}
-          <div className="py-24 bg-white sm:py-32">
-            <div className="max-w-md mx-auto pl-4 pr-8 sm:max-w-lg sm:px-6 lg:max-w-7xl lg:px-8">
-              <h1 className="text-4xl leading-10 font-extrabold tracking-tight text-gray-900 text-center sm:text-5xl sm:leading-none lg:text-6xl">
-                Need Assistance
-              </h1>
-              <p className="mt-6 max-w-3xl mx-auto text-xl leading-normal text-gray-500 text-center">
-                If you are having trouble or would like some additional assistance making your booking please call or email our Rental Advisor team at:
-              </p>
-              <dl className="mt-6 max-w-3xl mx-auto text-sm leading-normal text-gray-500 text-center">
-                <dd><span className="font-bold">Vancouver/Calgary: </span>604-369-4725</dd>
-                <dd><span className="font-bold">Toronto/Ottawa: </span> 436-888-8958</dd>
-                <dd><span className="font-bold">Email: </span> rent@hollyburn.com</dd>
-              </dl>
-            </div>
-          </div>
+            <NeedAssistance />
 
         </main>
     )
