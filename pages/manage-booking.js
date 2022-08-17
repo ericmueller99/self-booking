@@ -131,20 +131,20 @@ export default function ManageBooking({booking}) {
                                     <div className="space-y-6 text-base leading-7 text-hbGray">
                                         <p className="text-xl font-bold border-b border-b-gray-300/50 pb-5">Booking Details</p>
                                         <ul className="space-y-4">
-                                            <li className="flex items-center">
-                                                <span className="font-bold mr-1">Name: </span>
+                                            <li className="flex lg:items-center lg:flex-row flex-col">
+                                                <span className="font-bold mr-1 pb-1 lg:pb-0">Name: </span>
                                                 <span>{bookingDetails.subject}</span>
                                             </li>
-                                            <li className="flex items-center">
-                                                <span className="font-bold mr-1">Start: </span>
+                                            <li className="flex lg:items-center lg:flex-row flex-col">
+                                                <span className="font-bold mr-1 pb-1 lg:pb-0">Start: </span>
                                                 <span>{bookingDetails.start}</span>
                                             </li>
-                                            <li className="flex items-center">
-                                                <span className="font-bold mr-1">End: </span>
+                                            <li className="flex lg:items-center lg:flex-row flex-col">
+                                                <span className="font-bold mr-1 pb-1 lg:pb-0">End: </span>
                                                 <span>{bookingDetails.end}</span>
                                             </li>
-                                            <li className="flex items-center">
-                                                <span className="font-bold mr-1">Location: </span>
+                                            <li className="flex lg:items-center lg:flex-row flex-col">
+                                                <span className="font-bold mr-1 pb-1 lg:pb-0">Location: </span>
                                                 <span>{bookingDetails.location}</span>
                                             </li>
                                         </ul>
