@@ -474,7 +474,7 @@ export default function Home() {
             </div>
 
           {/* Wizard */}
-          <div className="relative bg-hbLightGray min-h-screen">
+          <div className="relative bg-hbLightGray min-h-screen pb-4">
             <Element name="wizard-top"></Element>
 
             {/*Loading Widget*/}
