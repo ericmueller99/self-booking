@@ -60,7 +60,7 @@ export default function Home() {
         .then(res => {
           const {FirstName: firstName, LastName: lastName, Email: emailAddress, Phone: phoneNumber, isQualified, invalidFields, Preference__c: preferences = {}, recordType, Id: recordId} = res.data;
           const {Suite_Type__c: suiteTypes, Maximum_Budget__c: maxBudget, Desired_Move_In_Date__c: moveIn, Number_of_Occupants__c: numberOfOccupants, City__c: cities,
-            Neighbourhood__c: neighbourhoods} = preferences || {};
+            Neighbourhood__c: neighbourhoods, Pet_Friendly__c: petFriendly = false} = preferences || {};
           const primaryFieldsMatch = (firstName === basicForm.firstName  && lastName === basicForm.lastName && phoneNumber === basicForm.phoneNumber);
           //if the qualifyForm is completed the reset it and let the new submission determine.
           if (qualifyForm.result) {
@@ -85,6 +85,7 @@ export default function Home() {
             cities: cities ? cities.split(';') : [],
             neighbourhoods: neighbourhoods ? neighbourhoods.split(';') : [],
             moveIn: moveIn ? new Date(moveIn) : null,
+            petFriendly,
             primaryFieldsMatch
           })
           //if the qualification form is already setup then reset it

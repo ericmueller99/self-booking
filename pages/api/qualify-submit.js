@@ -3,15 +3,13 @@ import {Salesforce} from 'salesforce-connect';
 
 export default function handler(req,res) {
 
-    //TODO before submitting a new form everytime check to see if the information is updated or new.  Because there is a back button on this i don't want a ton of form submissions for no reason
-
     //only accepting post requests
     if (req.method.toLowerCase() !== 'post') {
         res.status(401).send('');
         return;
     }
 
-    const {firstName, lastName, emailAddress, phoneNumber, suiteTypes, maxBudget, moveIn, petFriendly, numberOfOccupants, utmCampaign, utmSource, utmMedium, utmContent, utmTerm, cities, neighbourhoods} = req.body;
+    const {firstName, lastName, emailAddress, phoneNumber, suiteTypes, maxBudget, moveIn, petFriendly = false, numberOfOccupants, utmCampaign, utmSource, utmMedium, utmContent, utmTerm, cities, neighbourhoods} = req.body;
     if (!firstName || !lastName || !emailAddress || !phoneNumber || !suiteTypes || !maxBudget || !numberOfOccupants || !cities) {
         res.status(400).json({
             result: false,
@@ -19,6 +17,8 @@ export default function handler(req,res) {
         })
         return;
     }
+
+    console.log(req.body);
 
     try {
         const {username, password, loginUrl, connectionType} = salesforceConnection();
@@ -37,13 +37,14 @@ export default function handler(req,res) {
             utm_Medium__c : utmMedium ? utmMedium : null,
             utm_Source__c: utmSource ? utmSource : null,
             utm_term__c: utmTerm ? utmTerm: null,
-            Pet_Friendly__c: petFriendly === 'Yes',
+            Pet_Friendly__c: petFriendly,
             Lead_Source__c: 'Form Submission',
             Lead_Source_Detail__c: 'ILS Qualification',
             City_Preference__c: cities.toString().replace(/,/g, ';'),
             Neighbourhood__c: neighbourhoods ? neighbourhoods.toString().replace(/,/g, ';') : null,
             Update_Preference__c: true
         }
+        console.log(salesforceData);
         const salesforce = new Salesforce(connectionType, connection);
         salesforce.insertSingleRecord('Form_Submission__c', salesforceData)
             .then((data) => {
