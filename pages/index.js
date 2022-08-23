@@ -317,10 +317,11 @@ export default function Home() {
         ...qualifyForm
       },
       title: 'Book Viewing',
-      descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book on.',
+      descriptionText: 'Choose a property, suite(s), and an available timeslot you would like to book.',
       formHolderClasses: 'none',
-      disclaimerText: 'Please Note, a booking does not guarantee a showing or rental of a suite.  Hollyburn Properties rents on a first come first serve basis for qualified prospects.  ' +
-            'In the event that a suite is rented before a showing any pending showings will be cancelled.'
+      disclaimerText: 'Please Note, a booking does not guarantee a showing or rental of a suite.  Hollyburn Properties rents on a first come first serve basis to qualified prospects.  ' +
+            'In the event that a suite is rented before a showing any pending showings will be cancelled.',
+      availableSuiteHolderClasses: 'mt-4 grid grid-cols-1 2xl:grid-cols-2 gap-y-6 lg:gap-x-4'
     }
 
     //if view state is set then overriding the normal view

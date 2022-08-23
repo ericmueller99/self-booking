@@ -6,9 +6,11 @@ const nextConfig = {
   webpack5: true,
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
-
     return config;
   },
+  images: {
+    domains: ['portal.hollyburn.com', 'www.hollyburn.com']
+  }
 }
 
 module.exports = nextConfig
