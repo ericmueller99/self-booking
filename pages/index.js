@@ -302,7 +302,8 @@ export default function Home() {
       formClasses: 'mt-9 grid grid-cols-1 lg:grid-cols-2 gap-y-6 sm:gap-x-8',
       textInputHolderClasses: 'col-span-2 lg:col-span-1',
       title: 'Qualification Form',
-      descriptionText: 'It looks like you aren\'t in our system yet or we are missing some important information.  Please complete our qualification form so that we can show you the suites that match your preferences.'
+      descriptionText: currentView ? 'Use our qualification form to update and save your preferences.'
+        : 'It looks like you aren\'t in our system yet or we are missing some important information.  Please complete our qualification form so that we can show you the suites that match your preferences.'
     }
 
     //options logic for BookAViewing Component
@@ -411,12 +412,7 @@ export default function Home() {
             </>
         )
       }
-      //loading and nothing else is going on
-      else if (isLoading) {
-        return (
-            <div className={"p-10 h-48"}></div>
-        )
-      }
+      //some sort of error message
       else if (error && error.errorMessage) {
         return <ErrorMessage />
       }
@@ -441,7 +437,6 @@ export default function Home() {
         </>
     )
   }
-
 
   if (bookingStatus.status === 'booked') {
     return (
