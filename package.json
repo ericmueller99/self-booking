@@ -26,7 +26,8 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.33.1",
     "react-scroll": "^1.8.7",
-    "salesforce-connect": "github:ericmueller99/salesforce-connect"
+    "salesforce-connect": "github:ericmueller99/salesforce-connect",
+    "sharp": "^0.30.7"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
