@@ -158,10 +158,11 @@ export default function Home() {
     setBookingStatus({status: 'pending'});
     setError({error: false})
 
-    //submitting the the calendar event to the api via a local proxy endpoint
+    //submitting the calendar event to the api via a local proxy endpoint
     let postData = {
       basicForm, qualifyForm, bookingForm
     }
+
     axios.post('/api/booking-submit', postData)
         .then(res => {
           if (!res.data && !res.data.id) {
