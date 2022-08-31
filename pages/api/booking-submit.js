@@ -24,6 +24,7 @@ export default function handler(req,res) {
         }
 
         const bookingUrl = `https://api.hollyburn.com/properties/property/${property}/book-a-viewing`;
+        // const bookingUrl = `http://localhost:3001/properties/property/${property}/book-a-viewing`
         const postData = {
             startDate, endDate, bookingType: 'self',
             emailAddress, firstName, lastName, phoneNumber,
@@ -50,9 +51,10 @@ export default function handler(req,res) {
                 console.log(error);
                 res.status(500).json({
                     result: false,
-                    errorMessage: error.errorMessage || 'Unknown error occurred.  Please try again or contact our Rental Advisor team for assistance.'
+                    errorMessage: error?.response?.data?.errorMessage || 'Unknown error occurred.  Please try again or contact our Rental Advisor team for assistance.'
                 })
-            })
+            });
+
     }
 
     //making sure that an existing booking does not already exist
@@ -61,7 +63,6 @@ export default function handler(req,res) {
       bookingForm.property
     )
       .then(existingBooking => {
-          console.log(existingBooking);
           if (existingBooking) {
               res.status(400).json({
                   result:false,
