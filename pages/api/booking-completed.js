@@ -22,7 +22,8 @@ export default function handler(req,res) {
         Description: calendarEvent.body.content,
         Type: 'Book a Viewing',
         Virtual_Viewing__c: false,
-        Manage_Key__c: calendarEvent.manageKey
+        Manage_Key__c: calendarEvent.manageKey,
+        Building__c: null
     }
     const formSubmissionDetails = {
         Lead_Source__c: 'Form Submission',
@@ -46,21 +47,28 @@ export default function handler(req,res) {
     }
 
     //the form APEX trigger performs some actions on the calendar event, so it needs to be created first.
-    salesforce.insertSingleRecord('Event', eventDetails)
-        .then(() => salesforce.insertSingleRecord('Form_Submission__c', formSubmissionDetails))
-        .then((formRes) => {
-            console.log('done!');
-            console.log(formRes);
-            res.status(200).json({
-                result: true
-            })
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json({
-                result: false,
-                errorMessage: error.message || 'unknown internal error'
-            })
-        })
+    salesforce.getRecordsFromSOQL(`SELECT Id from Property__c WHERE Property_HMY__c = ${bookingForm.property}`)
+      .then(propertyData => {
+          if (propertyData.length > 0) {
+              const [{Id: propertyId}] = propertyData || null;
+              eventDetails.Building__c = propertyId;
+          }
+      })
+      .then(() => salesforce.insertSingleRecord('Event', eventDetails))
+      .then(() => salesforce.insertSingleRecord('Form_Submission__c', formSubmissionDetails))
+      .then((formRes) => {
+          console.log('done!');
+          console.log(formRes);
+          res.status(200).json({
+              result: true
+          })
+      })
+      .catch(error => {
+          console.log(error);
+          res.status(500).json({
+              result: false,
+              errorMessage: error.message || 'unknown internal error'
+          })
+      });
 
 }
