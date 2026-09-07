@@ -1,6 +1,4 @@
-import {Graph} from 'hollyburn-util';
-import {Salesforce} from 'salesforce-connect';
-import {salesforceConnection} from "../../lib/helpers";
+import {hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
 
 export default function handler(req, res) {
 
@@ -8,7 +6,8 @@ export default function handler(req, res) {
         res.status(400).json({
             result: false,
             errorMessage: "unsupported method type"
-        })
+        });
+        return;
     }
 
     const {eventId} = req.body;
@@ -16,30 +15,23 @@ export default function handler(req, res) {
         res.status(400).json({
             result: false,
             errorMessage: "eventId is required"
-        })
+        });
+        return;
     }
 
-    const {loginUrl, username, password, connectionType} = salesforceConnection();
-    const salesforce = new Salesforce(connectionType, {username,password,loginUrl});
-
-    //cancelling the event in Salesforce will cancel it via the Graph API througha APEX trigger.
-    const salesforceData ={
-        Cancelled__c: true,
-        Calendar_Event_ID__c: eventId
-    }
-    salesforce.upsertSingleRecord('Event', salesforceData, 'Calendar_Event_ID__c')
-        .then(data => {
-            console.log(data);
+    hollyburnApi()
+        .post('/leads/cancel-booking', { eventId })
+        .then(() => {
             res.status(200).json({
                 result: true
-            })
+            });
         })
         .catch(error => {
             console.log(error);
             res.status(500).json({
                 result: false,
-                errorMessage: error.message || "unknown internal error"
-            })
-        })
+                errorMessage: apiErrorMessage(error, "unknown internal error")
+            });
+        });
 
 }
