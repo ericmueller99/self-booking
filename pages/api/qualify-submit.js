@@ -1,5 +1,16 @@
 import {hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
 
+const coercePetFriendly = (value) => {
+    if (value === true) {
+        return true;
+    }
+    if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase();
+        return normalized === 'true' || normalized === 'yes' || normalized === '1';
+    }
+    return false;
+};
+
 export default function handler(req,res) {
 
     //only accepting post requests
@@ -17,6 +28,9 @@ export default function handler(req,res) {
         return;
     }
 
+    const petFriendlyBool = coercePetFriendly(petFriendly);
+    const occupants = parseInt(numberOfOccupants, 10);
+
     hollyburnApi()
         .post('/leads/qualification-form', {
             firstName,
@@ -26,8 +40,8 @@ export default function handler(req,res) {
             suiteTypes,
             maxBudget,
             moveIn,
-            petFriendly,
-            numberOfOccupants,
+            petFriendly: petFriendlyBool,
+            numberOfOccupants: Number.isFinite(occupants) ? occupants : numberOfOccupants,
             utmCampaign,
             utmSource,
             utmMedium,
