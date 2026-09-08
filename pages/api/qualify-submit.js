@@ -1,15 +1,5 @@
 import {hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
-
-const coercePetFriendly = (value) => {
-    if (value === true) {
-        return true;
-    }
-    if (typeof value === 'string') {
-        const normalized = value.trim().toLowerCase();
-        return normalized === 'true' || normalized === 'yes' || normalized === '1';
-    }
-    return false;
-};
+import {isPetFriendlyRequired} from "../../lib/form-helpers";
 
 export default function handler(req,res) {
 
@@ -28,7 +18,7 @@ export default function handler(req,res) {
         return;
     }
 
-    const petFriendlyBool = coercePetFriendly(petFriendly);
+    const petFriendlyBool = isPetFriendlyRequired(petFriendly);
     const occupants = parseInt(numberOfOccupants, 10);
 
     hollyburnApi()

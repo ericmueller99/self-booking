@@ -13,7 +13,6 @@
     "@heroicons/react": "^1.0.6",
     "axios": "^0.27.2",
     "fs": "^0.0.1-security",
-    "hollyburn-lib": "github:ericmueller99/hollyburn-lib",
     "hollyburn-util": "github:ericmueller99/hollyburn-util",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",

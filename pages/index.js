@@ -1,5 +1,9 @@
 import React from "react";
-import {BasicForm, LoadingWidget, QualifyForm, BookAViewing, ThankYou} from 'hollyburn-lib';
+import {BasicForm} from '../components/BasicForm';
+import {QualifyForm} from '../components/QualifyForm';
+import {BookAViewing} from '../components/BookAViewing';
+import {ThankYou} from '../components/ThankYou';
+import {LoadingWidget} from '../components/utils';
 import axios from "axios";
 import '../node_modules/react-datepicker/dist/react-datepicker.css';
 import {useRouter} from "next/router";

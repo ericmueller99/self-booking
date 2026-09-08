@@ -1,4 +1,5 @@
 import {checkForExistingPropertyBooking, hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
+import {isPetFriendlyRequired} from "../../lib/form-helpers";
 
 export default function handler(req,res) {
 
@@ -33,7 +34,9 @@ export default function handler(req,res) {
                 suiteType: qualifyForm.suiteTypes ? qualifyForm.suiteTypes.map(s => Number(s)) : basicForm.suiteTypes.map(s => Number(s)),
                 maxBudget: qualifyForm.maxBudget ? qualifyForm.maxBudget : basicForm.maxBudget,
                 numberOfOccupants: qualifyForm.numberOfOccupants ? qualifyForm.numberOfOccupants : basicForm.numberOfOccupants,
-                petFriendly: qualifyForm.petFriendly ? true : !!basicForm.petFriendly,
+                petFriendly: qualifyForm.petFriendly !== undefined
+                    ? isPetFriendlyRequired(qualifyForm.petFriendly)
+                    : isPetFriendlyRequired(basicForm.petFriendly),
                 cities: qualifyForm.cities && qualifyForm.cities.length > 0 ? qualifyForm.cities : basicForm.cities,
                 neighbourhoods: qualifyForm.neighbourhoods && qualifyForm.neighbourhoods.length > 0 ? qualifyForm.neighbourhoods : basicForm.neighbourhoods,
                 utmCampaign: qualifyForm.utmCampaign || basicForm.utmCampaign,
