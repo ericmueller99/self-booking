@@ -1,1 +1,9 @@
 node_modules
+.next
+.git
+.idea
+.env*
+npm-debug.log*
+README.md
+Makefile
+scripts

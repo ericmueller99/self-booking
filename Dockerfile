@@ -36,4 +36,8 @@ EXPOSE 3003
 
 ENV PORT 3003
 
+# curl is not present in node:16-alpine, so the probe goes through node itself.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:3003/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+
 CMD ["node", "server.js"]
