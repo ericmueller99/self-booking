@@ -44,11 +44,18 @@ export default function handler(req,res) {
         })
         .then(response => {
             const data = response.data || {};
+            //QualifyForm reads res.data.data.id and only then marks the step complete, so the
+            //id has to be inside data. Falling back to the API's local form_submissions id
+            //means step 2 still advances when the Salesforce kill switch is off.
             res.status(200).json({
                 result: true,
-                data,
+                data: {
+                    ...data,
+                    id: data.id || data.formSubmissionId || null
+                },
                 formSubmissionId: data.id || data.formSubmissionId || 'local',
-                id: data.id
+                id: data.id || data.formSubmissionId || null,
+                inquiryId: data.inquiryId || null
             });
         })
         .catch(error => {

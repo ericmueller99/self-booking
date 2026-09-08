@@ -29,6 +29,9 @@ export default function handler(req,res) {
         const postData = {
             startDate, endDate, bookingType: 'self',
             emailAddress, firstName, lastName, phoneNumber,
+            //the inquiry this wizard session raised, so the booking attaches to it instead of
+            //leaving a second, unlinked record. The API verifies it against the email/phone.
+            inquiryId: qualifyForm.inquiryId || basicForm.inquiryId || null,
             preferences: {
                 moveIn: basicForm.moveIn ? basicForm.moveIn : qualifyForm.moveIn,
                 suiteType: qualifyForm.suiteTypes ? qualifyForm.suiteTypes.map(s => Number(s)) : basicForm.suiteTypes.map(s => Number(s)),
