@@ -1,12 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  presets: [
-      require('./node_modules/hollyburn-lib/tailwind.config')
-  ],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/hollyburn-lib/src/components/*.js"
+    "./components/**/*.{js,jsx}"
   ],
   theme: {
     extend: {
@@ -17,7 +13,8 @@ module.exports = {
         'hbLightGray': '#f5f5f5',
         'footerBorder': '#c8c6c5',
         'fontGray': "#868686",
-        'hbBlue': '#003976'
+        'hbBlue': '#003976',
+        'hbLightGrayText': '#959595'
       },
       minHeight: {
         '1/2':'50%',
@@ -29,7 +26,8 @@ module.exports = {
       },
       backgroundImage: {
         'bookingBanner': 'url(/images/booking-banner.jpg)',
-        'manageBanner':'url(/images/manage-banner.jpg)'
+        'manageBanner':'url(/images/manage-banner.jpg)',
+        'footerHero': 'url(/images/footer-img.jpg)'
       }
     },
   },

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoadingWidget} from "hollyburn-lib";
+import {LoadingWidget} from "../components/utils";
 import React from 'react';
 import {Element} from "react-scroll";
 import HeroImage from "./components/HeroImage";
