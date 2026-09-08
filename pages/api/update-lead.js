@@ -1,5 +1,4 @@
-import {Salesforce} from 'salesforce-connect';
-import {salesforceConnection} from "../../lib/helpers";
+import {hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
 
 export default function handler(req,res) {
 
@@ -8,24 +7,35 @@ export default function handler(req,res) {
         res.status(400).json({
             result: false,
             errorMessage: "unable to update lead.  basicForm is missing from API call."
-        })
+        });
+        return;
     }
-    const {firstName: FirstName, lastName: LastName, phoneNumber: Phone, recordType, recordId: Id} = basicForm;
-    const {username, password, loginUrl, connectionType} = salesforceConnection();
-    const salesforce = new Salesforce(connectionType, {username, password, loginUrl});
-    salesforce.updateSingleRecord(recordType, {
-        FirstName, LastName, Phone, Id
-    })
-        .then(data => {
-            console.log('done!');
-            console.log(data);
-            res.status(200).json(data);
+
+    const {firstName, lastName, phoneNumber, emailAddress, leadCode, Id} = basicForm;
+    const code = leadCode || Id;
+    if (!code) {
+        res.status(200).json({
+            result: true
+        });
+        return;
+    }
+
+    hollyburnApi()
+        .patch(`/leads/${code}`, {
+            firstName,
+            lastName,
+            emailAddress,
+            phoneNumber
+        })
+        .then(response => {
+            res.status(200).json(response.data);
         })
         .catch(error => {
-          res.status(500).json({
-              result: false,
-              errorMessage: error.message || 'internal system error'
-          })
-        })
+            console.log(error);
+            res.status(500).json({
+                result: false,
+                errorMessage: apiErrorMessage(error, 'internal system error')
+            });
+        });
 
 }

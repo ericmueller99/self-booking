@@ -1,5 +1,4 @@
-import axios from "axios";
-import {checkForExistingPropertyBooking} from "../../lib/helpers";
+import {checkForExistingPropertyBooking, hollyburnApi, apiErrorMessage} from "../../lib/hollyburn-api";
 
 export default function handler(req,res) {
 
@@ -15,43 +14,48 @@ export default function handler(req,res) {
 
     //creates the booking
     const createBooking = () => {
-        const apiKey = process.env.HOLLYBURN_API_KEY;
-        if (!apiKey) {
+        let api;
+        try {
+            api = hollyburnApi();
+        } catch (error) {
             res.status(400).json({
                 result: false,
-                errorMessage: "HOLLYBURN_API_KEY env variable is not set"
-            })
+                errorMessage: error.message
+            });
+            return;
         }
 
-        const bookingUrl = `https://api.hollyburn.com/properties/property/${property}/book-a-viewing`;
-        // const bookingUrl = `http://localhost:3001/properties/property/${property}/book-a-viewing`
         const postData = {
             startDate, endDate, bookingType: 'self',
             emailAddress, firstName, lastName, phoneNumber,
             preferences: {
                 moveIn: basicForm.moveIn ? basicForm.moveIn : qualifyForm.moveIn,
                 suiteType: qualifyForm.suiteTypes ? qualifyForm.suiteTypes.map(s => Number(s)) : basicForm.suiteTypes.map(s => Number(s)),
-                maxBudget: qualifyForm.maxBudget ? qualifyForm.maxBudget : basicForm.maxBudget
+                maxBudget: qualifyForm.maxBudget ? qualifyForm.maxBudget : basicForm.maxBudget,
+                numberOfOccupants: qualifyForm.numberOfOccupants ? qualifyForm.numberOfOccupants : basicForm.numberOfOccupants,
+                petFriendly: qualifyForm.petFriendly ? true : !!basicForm.petFriendly,
+                cities: qualifyForm.cities && qualifyForm.cities.length > 0 ? qualifyForm.cities : basicForm.cities,
+                neighbourhoods: qualifyForm.neighbourhoods && qualifyForm.neighbourhoods.length > 0 ? qualifyForm.neighbourhoods : basicForm.neighbourhoods,
+                utmCampaign: qualifyForm.utmCampaign || basicForm.utmCampaign,
+                utmSource: qualifyForm.utmSource || basicForm.utmSource,
+                utmMedium: qualifyForm.utmMedium || basicForm.utmMedium,
+                utmContent: qualifyForm.utmContent || basicForm.utmContent,
+                utmTerm: qualifyForm.utmTerm || basicForm.utmTerm
             },
             bookingSuites: suites
         }
-        const config = {
-            headers: {
-                key: apiKey
-            }
-        }
 
-        axios.post(bookingUrl, postData, config)
+        api.post(`/properties/property/${property}/book-a-viewing`, postData)
             .then(response => {
                 console.log('done!');
-                console.log(response);
+                console.log(response.data);
                 res.json(response.data);
             })
             .catch(error => {
                 console.log(error);
                 res.status(500).json({
                     result: false,
-                    errorMessage: error?.response?.data?.errorMessage || 'Unknown error occurred.  Please try again or contact our Rental Advisor team for assistance.'
+                    errorMessage: apiErrorMessage(error, 'Unknown error occurred.  Please try again or contact our Rental Advisor team for assistance.')
                 })
             });
 

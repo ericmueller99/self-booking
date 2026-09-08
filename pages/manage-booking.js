@@ -4,7 +4,7 @@ import React from 'react';
 import {Element} from "react-scroll";
 import HeroImage from "./components/HeroImage";
 import CancelModel from "./components/CancelModel";
-import {getCalendarEventFromSalesforce} from '../lib/connections';
+import {getCalendarEventByManageKey} from '../lib/connections';
 
 export async function getServerSideProps(context) {
 
@@ -16,7 +16,7 @@ export async function getServerSideProps(context) {
             }
         }
     }
-    const bookingData = await getCalendarEventFromSalesforce(manageKey);
+    const bookingData = await getCalendarEventByManageKey(manageKey);
     if (!bookingData.result || !bookingData.booking.eventId) {
         return {
             props: {
