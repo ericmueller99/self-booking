@@ -26,7 +26,7 @@ EXPORTS := IMAGE=$(IMAGE) TAG=$(TAG) PLATFORM=$(PLATFORM) SERVER_IP=$(SERVER_IP)
            COMPOSE_FILE=$(COMPOSE_FILE)
 
 .DEFAULT_GOAL := help
-.PHONY: help build deploy release push logs ps status health restart rollback shell ssh clean patch-healthcheck
+.PHONY: help build deploy release push logs ps status health restart rollback shell ssh clean patch-healthcheck sync-env
 
 help: ## Show this help
 	@echo "self-booking -> $(SERVER_IP):$(APP_PORT)   image $(IMAGE):$(TAG)"
@@ -80,6 +80,9 @@ ssh: ## SSH into the server
 
 clean: ## Remove dangling images on the server
 	@$(SSH) $(SERVER) "docker image prune -f"
+
+sync-env: ## Upload .env.production to the server and drive the container from it
+	@$(EXPORTS) REMOTE_ENV=/root/$(SERVICE).env ./scripts/sync-env.sh
 
 patch-healthcheck: ## Replace the broken curl healthcheck in the server compose file
 	@$(EXPORTS) ./scripts/patch-healthcheck.sh
